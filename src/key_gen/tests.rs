@@ -16,11 +16,14 @@ use itertools::Itertools;
 use rand::{Rng, RngCore};
 use std::collections::{BTreeMap, BTreeSet};
 use std::convert::TryInto;
+use std::fmt::Debug;
+use std::ops::Neg;
 use xor_name::XorName;
 
 use bls12_381::G1Affine;
 use bls12_381::G2Affine;
 use bls_like::PublicKeyAffine;
+use serde::Serialize;
 
 // Alter the configure of the number of nodes and the threshold.
 const NODENUM: usize = 5;
@@ -280,7 +283,7 @@ fn threshold_signature() -> Result<()> {
     let (_, generators) = setup_generators(&mut rng, BTreeSet::new())?;
 
     // Compute the keys and threshold signature shares.
-    let msg = "Hello from the group!";
+    let msg = "0";
 
     let pub_key_set = generators[0]
         .generate_keys()
@@ -289,7 +292,6 @@ fn threshold_signature() -> Result<()> {
         .public_key_set;
 
     let mut sig_shares = BTreeMap::new();
-
 
     for (idx, generator) in generators.iter().enumerate() {
         assert!(generator.is_ready());
@@ -306,12 +308,16 @@ fn threshold_signature() -> Result<()> {
         assert_eq!(pks, pub_key_set);
         let sig = sk.sign(msg);
 
+        let bytes_pk = &pks.public_key().to_bytes();
+        let bytes_sig = &sig.to_bytes();
 
-        let test = G1Affine::from_compressed(&pks.public_key().to_bytes());
-        let test_2 = G2Affine::from_compressed(&sig.to_bytes());
+        // let test = G1Affine::from_compressed(&bytes_pk).unwrap();
+        // let test_2 = G2Affine::from_compressed(&bytes_sig).unwrap();
+        // println!("\nPublic_key::Affine {:?}", test);
+        // println!("Signature::Affine {:?}", test_2);
 
-        println!("Public_key::Affine {:?}", test.unwrap());
-        println!("Signature::Affine {:?}", test_2);
+        println!("::::::::{:?}", hex::encode(bytes_pk));
+        println!("::::::::{:?}", hex::encode(bytes_sig));
 
         assert!(pks.public_key_share(idx).verify(&sig, msg));
         let _ = sig_shares.insert(idx, sig);
