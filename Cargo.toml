@@ -8,7 +8,7 @@ license = "MIT OR BSD-3-Clause"
 name = "bls_dkg"
 readme = "README.md"
 repository = "https://github.com/maidsafe/bls_dkg"
-version = "0.9.1"
+version = "1.0.1"
 
 [dependencies]
 aes = "~0.7.4"
@@ -18,13 +18,16 @@ blsttc = "3.1.0"
 log = "~0.4.8"
 rand = "~0.7.3"
 rand_core = "~0.5.1"
-serde = { version="1.0.106", features = ["derive"] }
 serde_derive = "1.0.106"
 thiserror = "1.0.23"
 xor_name = "3.0.0"
 bls12_381 = "0.6.0"
 hex = "0.4.3"
 bls-like = "0.1.0"
+
+  [dependencies.serde]
+  version = "1.0.106"
+  features = [ "derive" ]
 
   [dependencies.tiny-keccak]
   version = "2.0.2"
